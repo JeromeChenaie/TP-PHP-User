@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    container_name: tp_php_web
     build: site
     ports :
      - "80:80"
@@ -11,6 +12,7 @@ services:
      - ./server/php.ini:/usr/local/etc/php/php.ini
 
   mariadb:
+    container_name: tp_php_mariadb
     image: mariadb
     restart: always
     environment:
@@ -24,6 +26,7 @@ services:
       - mariadb_data:/var/lib/mysql
 
   phpmyadmin:
+    container_name: tp_php_phpmyadmin
     image: phpmyadmin
     restart: always
     environment:
