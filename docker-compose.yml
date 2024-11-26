@@ -14,7 +14,6 @@ services:
   mariadb:
     container_name: tp_php_mariadb
     image: mariadb
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: esgipwd
       MYSQL_DATABASE: esgi
@@ -28,7 +27,6 @@ services:
   phpmyadmin:
     container_name: tp_php_phpmyadmin
     image: phpmyadmin
-    restart: always
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: mariadb
