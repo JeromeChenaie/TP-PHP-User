@@ -12,8 +12,16 @@ class View
         $this->template = $template;
     }
 
-    public function addData(string $key, string $value) {
-        $this->data[$key] = $value;
+    public function addData(string $key, string|array $value) {
+        if (is_array($value)) {
+            if (isset($this->data[$key])) {
+                $this->data[$key] = array_merge($this->data[$key], $value);
+            } else {
+                $this->data[$key] = $value;
+            }
+        } else {
+            $this->data[$key] = $value;
+        }
     }
 
     public function __toString() {
