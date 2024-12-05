@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Core;
 
 class UserValidator
@@ -7,6 +8,7 @@ class UserValidator
     public bool $firstnameValidation;
     public bool $lastnameValidation;
     public bool $emailValidation;
+    public bool $uniqueEmailValidation;
     public bool $passwordValidation;
     public bool $countryValidation;
 
@@ -49,7 +51,17 @@ class UserValidator
         } else {
             $this->emailValidation = false;
             $this->errors['email'] = "Le email n'est pas valide";
+        }
+    }
 
+    public function uniqueEmailVerification(string $email): void
+    {
+        $sql = new \App\Core\SQL();
+        if ($sql->getOneByEmail($email)) {
+            $this->errors['email'] = "L'email n'est pas valide";
+            $this->uniqueEmailValidation = false;
+        } else {
+            $this->uniqueEmailValidation = true;
         }
     }
 
@@ -73,7 +85,6 @@ class UserValidator
         } else {
             $this->countryValidation = false;
             $this->errors['country'] = "Le pays n'est pas valide";
-
         }
     }
 }
