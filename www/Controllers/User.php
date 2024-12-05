@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Core\SQL;
 use App\Core\View;
 use App\Core\User as CoreUser;
 
@@ -13,38 +14,36 @@ class User
 
     public function login(): void
     {
-        $view = new View("User/login.php", "front.php");
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
 
-            if (empty($email) || empty($password)) {
-                $view->addData('erreur', 'Tous les champs sont obligatoires.');
-                return;
-            }
+        if (!empty($_POST)) {
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $view->addData('erreur', "L'email n'est pas valide.");
-                return;
-            }
+            $userValidator = new \App\Core\UserValidator();
 
-            $sql = new \App\Core\SQL();
-            $user = $sql->getOneByEmail($email);
-            if ($user && password_verify($password, $user['password'])) {
+            $userValidator->cleanAndCheckEmail($_POST['email']);
 
-                session_start();
-                $_SESSION['user'] = [
-                    'id' => $user['id'],
-                    'username' => $user['username'],
-                ];
+            if (!empty($userValidator->errors)) {
+                $view = new View("User/login.php");
+                $view->addData("title", "Connexion");
+                $view->addData("description", "Page de connexion du site");
 
-                header("Location: /");
-                exit;
+                $view->addData("errors", $userValidator->errors);
             } else {
-                $view->addData('erreur', 'tout est incorrect.');
+                $sql = new SQL();
+                $user = $sql->getOneByEmail($_POST['email']);
+                if (password_verify($_POST['password'], $user['password'])) {
+                    session_start();
+                    $_SESSION['user'] = $user;
+
+                    header("Location: /");
+                    exit;
+                }
             }
         }
+
+        $view = new View("User/login.php", "front.php");
+        $view->addData("title", "Connexion");
+        $view->addData("description", "Page de connexion du site");
     }
 
     public function logout(): void
