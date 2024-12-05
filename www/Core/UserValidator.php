@@ -54,6 +54,16 @@ class UserValidator
         }
     }
 
+    public function uniqueEmailVerification(string $email): void
+    {
+        $sql = new \App\Core\SQL();
+        if ($sql->getOneByEmail($email)) {
+            $this->errors['email'] = "L'email n'est pas valide";
+            $this->uniqueEmailValidation = false;
+        } else {
+            $this->uniqueEmailValidation = true;
+        }
+    }
 
     public function checkPassword(string $password, string $passwordConfirmation): void
     {
