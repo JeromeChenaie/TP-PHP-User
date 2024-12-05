@@ -2,10 +2,18 @@
 
 namespace App\Controllers;
 
+use App\Core\View;
+
 class Main
 {
     public function home(): void
     {
-        echo 'Welcome';
+        session_start();
+        if (!isset($_SESSION['user'])){
+            header('Location: /login');
+            exit;
+        }
+
+        $view = new View("Main/home.php");
     }
 }

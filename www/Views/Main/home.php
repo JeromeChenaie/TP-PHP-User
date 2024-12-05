@@ -1,0 +1,1 @@
+Bienvenue, <?= $_SESSION["user"]["firstname"]; ?> !
