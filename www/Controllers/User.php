@@ -3,18 +3,15 @@
 namespace App\Controllers;
 use App\Core\SQL;
 use App\Core\View;
-use App\Core\User as CoreUser;
-
-use App\Core\View;
+use App\Core\UserValidator;
 
 class User
 {
     public function register(): void
     {
-
         if (!empty($_POST)) {
 
-            $userValidator = new \App\Core\UserValidator();
+            $userValidator = new UserValidator();
 
             $userValidator->cleanAndCheckEmail($_POST['email']);
             $userValidator->cleanAndCheckFirstname($_POST['firstname']);
@@ -42,11 +39,9 @@ class User
 
     public function login(): void
     {
-
-
         if (!empty($_POST)) {
 
-            $userValidator = new \App\Core\UserValidator();
+            $userValidator = new UserValidator();
 
             $userValidator->cleanAndCheckEmail($_POST['email']);
 
@@ -76,7 +71,7 @@ class User
 
     public function logout(): void
     {
-        $user = new CoreUser;
+        $user = new \App\Core\User();
         $user->logout();
         //header("Location: /");
     }
