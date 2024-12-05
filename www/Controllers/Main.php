@@ -15,5 +15,7 @@ class Main
         }
 
         $view = new View("Main/home.php");
+        $view->addData("title", "Accueil");
+        $view->addData("description", "Voici la page d'accueil du site");
     }
 }
