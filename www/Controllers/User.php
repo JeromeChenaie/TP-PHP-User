@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Core\SQL;
 use App\Core\View;
 use App\Core\UserValidator;
@@ -16,6 +17,7 @@ class User
             $userValidator->cleanAndCheckEmail($_POST['email']);
             $userValidator->cleanAndCheckFirstname($_POST['firstname']);
             $userValidator->cleanAndCheckLastname($_POST['lastname']);
+            $userValidator->uniqueEmailVerification($_POST['email']);
             $userValidator->cleanAndCheckCountry($_POST['country']);
             $userValidator->checkPassword($_POST['password'], $_POST['passwordConfirm']);
 
@@ -27,9 +29,21 @@ class User
                 $view->addData("errors", $userValidator->errors);
                 $view->addData("lastData", $userValidator->lastData);
             } else {
-                // TODO: Ajout en BDD
-            }
+                $userData = [
+                    "email" => $_POST['email'],
+                    "password" => $_POST['password'],
+                    "firstname" => $_POST['firstname'],
+                    "lastname" => $_POST['lastname'],
+                    "country" => $_POST['country']
+                ];
 
+                $sql = new \App\Core\SQL();
+                if ($sql->createUser($userData)) {
+                    header("Location: /login");
+                } else {
+                    echo "Une erreur est survenu lors de l'ajout de l'utilisateur";
+                }
+            }
         } else {
             $view = new View("User/register.php");
             $view->addData("title", "Inscription");
