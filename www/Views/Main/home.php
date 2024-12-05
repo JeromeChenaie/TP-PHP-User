@@ -1,1 +1,1 @@
-Bienvenue, <?php $username; ?> !
+Bienvenue, <?= $_SESSION["user"]["firstname"]; ?> !
